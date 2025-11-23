@@ -1,8 +1,7 @@
-#include <iostream>
-#include <cstdio>
-#include <vector>
-#include <cstring>
-#include <cmath>
+# include <iostream>
+# include <cstdio>
+# include <vector>
+# include <cstring>
 # include <algorithm>
 
 using namespace std;
@@ -38,6 +37,14 @@ class Graph {
         return true;
     }
 
+    bool connect_stations (string station_1, string station_2) {
+        int i_1 = find_station(station_1), i_2 = find_station(station_2), i;
+        bool found = false;
+        for (i = 0; i < station_connect_with[i_1].size(); i++) if (station_connect_with[i_1][i] == station_2) found = true;  
+        if (!found) station_connect_with[i_1].push_back(station_2);
+        return !found;
+    }
+
     bool construct (const char * filename) {
         FILE * arq = fopen(filename, "r");
         if (arq == NULL) return false;
@@ -67,14 +74,19 @@ class Graph {
         return true;
     }
 
+    void print_connections (string station) {
+        if (station_connect_with.empty()) return;
+        for (auto stt : station_connect_with[find_station(station)]) cout << stt << '\n';
+    }
+
     private :
 
     void connect () {
         station_connect_with.resize(stations.size());
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 1; j < lines[i].stations.size(); j++) {
-                station_connect_with[find_station(lines[i].stations[j])].push_back(lines[i].stations[j - 1]);
-                station_connect_with[find_station(lines[i].stations[j - 1])].push_back(lines[i].stations[j]);
+                connect_stations(lines[i].stations[j], lines[i].stations[j - 1]);
+                connect_stations(lines[i].stations[j - 1], lines[i].stations[j]);
             }
         }
     }
