@@ -3,6 +3,7 @@
 # include <vector>
 # include <cstring>
 # include <algorithm>
+# include <queue>
 
 using namespace std;
 
@@ -95,6 +96,6 @@ class Graph {
 
 int main () {
     Graph * G = new Graph();
-    G->construct("MTA_Lines.txt");
+    G->construct("../dados/MTA_Lines.txt");
     return 0;
 }
