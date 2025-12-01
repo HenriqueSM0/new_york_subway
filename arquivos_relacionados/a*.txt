@@ -1,0 +1,3 @@
+Uma opção de algoritmo para otimização é o A*
+- Verificar se vale a pena a implementação
+- Implementar se for o caso
