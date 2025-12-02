@@ -20,6 +20,7 @@ class Station {
     string name;
     int cor;
     int dist_origem;
+    int index_predecessor;
 
     Station (string name) {
         this->name = name;
@@ -130,10 +131,10 @@ int index_of_station(Graph *G, string station_name) {
     return -1;
 }
 
-int BFS(Graph *G, string start, string end) {
+int * BFS(Graph *G, string start, string end) {
     int start_index = index_of_station(G, start);
     int end_index = index_of_station(G, end);
-    if(start_index == -1 || end_index == -1) return -1;
+    if(start_index == -1 || end_index == -1) return NULL;
     for(int i=0;i<QTD_ESTACOES;i++) { if(i != start_index) (*G).stations[i].cor = BRANCO; (*G).stations[i].dist_origem = 0; }
     (*G).stations[start_index].cor = CINZA;
     queue<int> Q;
@@ -148,24 +149,52 @@ int BFS(Graph *G, string start, string end) {
             {
                 (*G).stations[(*G).station_connect_with[frente][i]].cor = CINZA;
                 (*G).stations[(*G).station_connect_with[frente][i]].dist_origem = (*G).stations[frente].dist_origem + 1;
+                (*G).stations[(*G).station_connect_with[frente][i]].index_predecessor = frente;
                 Q.push((*G).station_connect_with[frente][i]);
                 if((*G).station_connect_with[frente][i] == end_index)
                 {
-                    return (*G).stations[(*G).station_connect_with[frente][i]].dist_origem;
+                    int * path = new int[(*G).stations[end_index].dist_origem + 1];
+                    int index = end_index;
+                    int dist = (*G).stations[end_index].dist_origem;
+                    while(1)
+                    {
+                        path[dist] = index;
+                        dist--;
+                        if(index == start_index) break;
+                        index = (*G).stations[index].index_predecessor;
+                    }
+                    return path;
                 }
             }
         }
         (*G).stations[frente].cor = PRETO;
     }
-    return -1;
+    return NULL;
+}
+
+void caminho(Graph * NewYorkStations, string start, string end) {
+    int * path = BFS(NewYorkStations, start, end);
+    if(path != NULL)
+    {
+        cout << "Caminho encontrado (" << start << " -> " << end << "):\n";
+        for(int i=0;i<=(*NewYorkStations).stations[index_of_station(NewYorkStations, end)].dist_origem;i++)
+        {
+            cout << (*NewYorkStations).stations[path[i]].name << ' ' << path[i] << '\n';
+        }
+    }
+    else
+    {
+        cout << "Caminho não encontrado.\n";
+    }
 }
 
 int main () {
     Graph * G = new Graph();
     G->construct("../dados/MTA_Lines.txt");
-    // int dist = BFS(G, "Times Sq-42 St", "34 St-Penn Station");
-    // int dist = BFS(G, "Times Sq-42 St", "14 St");
-    int dist = BFS(G, "Times Sq-42 St", "Fulton St");
-    cout << "Distancia entre Times Sq - 42 St e 14 St: " << dist << '\n';
+    caminho(G, "Times Sq-42 St", "34 St-Penn Station");
+    cout << "----------------------\n";
+    caminho(G, "Times Sq-42 St", "14 St");
+    cout << "----------------------\n";
+    caminho(G, "Times Sq-42 St", "Fulton St");
     return 0;
 }
