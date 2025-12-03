@@ -77,7 +77,7 @@ class Graph {
             for (i = 0; buffer[i] != ':'; i++) line_name += buffer[i];
             lines.push_back(*(new Line (line_name)));
             tmp = i + 1;
-            for (i = tmp; buffer[i] != '\n'; i++) {
+            for (i = tmp; buffer[i] != '\n' && buffer[i] != '\r' && buffer[i] != '\0'; i++) {
                 if (buffer[i] == ',' && buffer[i + 1] == ' ') {
                     push_station(station_name);
                     lines.at(lines.size() - 1).stations.push_back(Station(station_name));
@@ -179,7 +179,7 @@ void caminho(Graph * NewYorkStations, string start, string end) {
         cout << "Caminho encontrado (" << start << " -> " << end << "):\n";
         for(int i=0;i<=(*NewYorkStations).stations[index_of_station(NewYorkStations, end)].dist_origem;i++)
         {
-            cout << (*NewYorkStations).stations[path[i]].name << ' ' << path[i] << '\n';
+            cout << (*NewYorkStations).stations[path[i]].name << '\n';
         }
     }
     else
