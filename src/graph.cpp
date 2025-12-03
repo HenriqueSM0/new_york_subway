@@ -90,11 +90,6 @@ class Graph {
         return true;
     }
 
-    void print_connections (string station_name) {
-        if (station_connect_with.empty()) return;
-        for (auto stt : station_connect_with[find_station(station_name)]) cout << stt << '\n';
-    }
-
     private :
 
     void connect () {
