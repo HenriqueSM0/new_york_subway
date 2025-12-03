@@ -370,7 +370,7 @@ int main () {
 
     int opt = -1;
     string station1, station2;
-    string buffer_flush; // Variável para limpar o buffer
+    string buffer_flush;
 
     while (opt != 9) {
         station1.clear();
